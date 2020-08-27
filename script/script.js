@@ -148,69 +148,108 @@
 
 // task 5
 
-class Car {
-  // Write code under this line
-  static getSpecs(car) {
-    return `maxSpeed: ${car.maxSpeed}, speed: ${car.speed}, isOn: ${car.isOn}, 
-    distance: ${car.distance}, price: ${car.price}`;
-  }
-  constructor({
-    maxSpeed = 0,
-    speed = 0,
-    isOn = false,
-    distance = 0,
-    price = 0,
-  } = {}) {
-    (this.maxSpeed = maxSpeed),
-      (this.speed = speed),
-      (this.isOn = isOn),
-      (this.distance = distance),
-      (this.price = price);
-  }
-  get price() {
-    return this._price;
-  }
-  set price(newPrice) {
-    return (this._price = newPrice);
-  }
-  turnOn() {
-    return (this.isOn = true);
-  }
-  turnOff() {
-    return (this.isOn = false), (this.speed = 0);
-  }
-  accelerate(value) {
-    return this.speed + value <= this.maxSpeed
-      ? (this.speed = this.speed + value)
-      : (this.speed = this.maxSpeed);
-  }
-  decelerate(value) {
-    return this.speed - value >= 0
-      ? (this.speed = this.speed - value)
-      : (this.speed = 0);
-  }
-  drive(hours) {
-    return this.isOn
-      ? (this.distance = this.speed * hours + this.distance)
-      : this.distance;
-  }
-}
+// class Car {
+//   // Write code under this line
+//   static getSpecs(car) {
+//     return `maxSpeed: ${car.maxSpeed}, speed: ${car.speed}, isOn: ${car.isOn},
+//     distance: ${car.distance}, price: ${car.price}`;
+//   }
+//   constructor({
+//     maxSpeed = 0,
+//     speed = 0,
+//     isOn = false,
+//     distance = 0,
+//     price = 0,
+//   } = {}) {
+//     (this.maxSpeed = maxSpeed),
+//       (this.speed = speed),
+//       (this.isOn = isOn),
+//       (this.distance = distance),
+//       (this.price = price);
+//   }
+//   get price() {
+//     return this._price;
+//   }
+//   set price(newPrice) {
+//     return (this._price = newPrice);
+//   }
+//   turnOn() {
+//     return (this.isOn = true);
+//   }
+//   turnOff() {
+//     return (this.isOn = false), (this.speed = 0);
+//   }
+//   accelerate(value) {
+//     return this.speed + value <= this.maxSpeed
+//       ? (this.speed = this.speed + value)
+//       : (this.speed = this.maxSpeed);
+//   }
+//   decelerate(value) {
+//     return this.speed - value >= 0
+//       ? (this.speed = this.speed - value)
+//       : (this.speed = 0);
+//   }
+//   drive(hours) {
+//     return this.isOn
+//       ? (this.distance = this.speed * hours + this.distance)
+//       : this.distance;
+//   }
+// }
 
-const mustang = new Car({ maxSpeed: 200, price: 2000 });
-mustang.turnOn();
-mustang.accelerate(50);
-mustang.drive(2);
+// const mustang = new Car({ maxSpeed: 200, price: 2000 });
+// mustang.turnOn();
+// mustang.accelerate(50);
+// mustang.drive(2);
 
-console.log(Car.getSpecs(mustang));
-// 'maxSpeed: 200, speed: 50, isOn: true, distance: 100, price: 2000'
+// console.log(Car.getSpecs(mustang));
+// // 'maxSpeed: 200, speed: 50, isOn: true, distance: 100, price: 2000'
 
-mustang.decelerate(20);
-mustang.drive(1);
-mustang.turnOff();
+// mustang.decelerate(20);
+// mustang.drive(1);
+// mustang.turnOff();
 
-console.log(Car.getSpecs(mustang));
-// 'maxSpeed: 200, speed: 0, isOn: false, distance: 130, price: 2000'
+// console.log(Car.getSpecs(mustang));
+// // 'maxSpeed: 200, speed: 0, isOn: false, distance: 130, price: 2000'
 
-console.log(mustang.price); // 2000
-mustang.price = 4000;
-console.log(mustang.price); // 4000
+// console.log(mustang.price); // 2000
+// mustang.price = 4000;
+// console.log(mustang.price); // 4000
+
+const tweets = [
+  { id: "000", likes: 5, tags: ["js", "nodejs"] },
+  { id: "001", likes: 2, tags: ["html", "css"] },
+  { id: "002", likes: 17, tags: ["html", "js", "nodejs"] },
+  { id: "003", likes: 8, tags: ["css", "react"] },
+  { id: "004", likes: 0, tags: ["js", "nodejs", "react"] },
+];
+
+const getTags = (tweets) =>
+  tweets.reduce((allTags, tweet) => {
+    allTags.push(...tweet.tags);
+
+    return allTags;
+  }, []);
+
+const tags = getTags(tweets);
+
+// Вынесем callback-функцию отдельно, а в reducе передадим ссылку на нее.
+// Это стандартная практика если callback-функция довольно большая.
+
+// Если в объекте-аккумуляторе acc нету своего свойства с ключем tag,
+// то создаем его и записывает ему значение 0.
+// В противном случае увеличиваем значение на 1.
+const getTagStats = (acc, tag) => {
+  if (!acc.hasOwnProperty(tag)) {
+    acc[tag] = 0;
+  }
+
+  acc[tag] += 1;
+
+  return acc;
+};
+
+// Начальное значение аккумулятора это пустой объект {}
+const countTags = (tags) => tags.reduce(getTagStats, {});
+
+const tagCount = countTags(tags);
+console.log(tagCount);
